@@ -1,0 +1,10 @@
+If:
+    PathMatch: [./src/backend/gporca/*]
+CompileFlags:
+    CompilationDatabase: ./src/backend/gporca/build.debug/compile_commands.json
+
+---
+If:
+    PathExclude: [./src/backend/gporca/*]
+CompileFlags:
+    CompilationDatabase: ./

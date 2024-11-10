@@ -1,9 +1,10 @@
 # Copyright (c) 2015, Pivotal Software, Inc.
 
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(gpopt_6X LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Default to shared libraries.
 option(BUILD_SHARED_LIBS "build shared libraries" ON)
@@ -49,6 +50,16 @@ endif()
 check_cxx_compiler_flag("-Wno-variadic-macros" COMPILER_HAS_WNO_VARIADIC_MACROS)
 if (COMPILER_HAS_WNO_VARIADIC_MACROS)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-variadic-macros")
+endif()
+
+check_cxx_compiler_flag("-Wno-unused-but-set-variable" COMPILER_HAS_WNO_UNUSED_BUT_SET_VARIABLE)
+if (COMPILER_HAS_WNO_UNUSED_BUT_SET_VARIABLE)
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-but-set-variable")
+endif()
+
+check_cxx_compiler_flag("-Wno-nonnull-compare" COMPILER_HAS_WNO_NONNULL_COMPARE)
+if (COMPILER_HAS_WNO_NONNULL_COMPARE)
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nonnull-compare")
 endif()
 
 # Generate maximum detail for DEBUG information with -g3 if available.
