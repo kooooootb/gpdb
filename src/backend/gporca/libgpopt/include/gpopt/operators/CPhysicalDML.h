@@ -42,6 +42,9 @@ private:
 	// array of source columns
 	CColRefArray *m_pdrgpcrSource;
 
+	// returning columns
+	CColRefArray *m_pdrgpcrOutput;
+
 	// set of modified columns from the target table
 	CBitSet *m_pbsModified;
 
@@ -67,6 +70,9 @@ private:
 	// required order spec
 	COrderSpec *m_pos;
 
+	// output distribution
+	CDistributionSpec *m_pdsOutput;
+
 	// required columns by local members
 	CColRefSet *m_pcrsRequiredLocal;
 
@@ -83,9 +89,9 @@ public:
 	// ctor
 	CPhysicalDML(CMemoryPool *mp, CLogicalDML::EDMLOperator edmlop,
 				 CTableDescriptor *ptabdesc, CColRefArray *pdrgpcrSource,
-				 CBitSet *pbsModified, CColRef *pcrAction, CColRef *pcrCtid,
-				 CColRef *pcrSegmentId, CColRef *pcrTupleOid,
-				 CColRef *prcTableOid);
+				 CColRefArray *pdrgpcrOutput, CBitSet *pbsModified,
+				 CColRef *pcrAction, CColRef *pcrCtid, CColRef *pcrSegmentId,
+				 CColRef *pcrTupleOid, CColRef *prcTableOid);
 
 	// dtor
 	virtual ~CPhysicalDML();
@@ -158,6 +164,13 @@ public:
 	PdrgpcrSource() const
 	{
 		return m_pdrgpcrSource;
+	}
+
+	// output columns
+	virtual CColRefArray *
+	PdrgpcrOutput() const
+	{
+		return m_pdrgpcrOutput;
 	}
 
 	// match function

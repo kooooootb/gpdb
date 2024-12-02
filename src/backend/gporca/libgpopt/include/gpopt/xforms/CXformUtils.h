@@ -127,11 +127,11 @@ private:
 		ULONG ulOriginOpId, CName *pname, CColRefArray *pdrgpcrOutput);
 
 	typedef CExpression *(PRewrittenIndexPath)(CMemoryPool *mp,
-											   CExpression *pexprIndexCond,
-											   CExpression *pexprResidualCond,
-											   const IMDIndex *pmdindex,
-											   CTableDescriptor *ptabdesc,
-											   COperator *popLogical);
+												CExpression *pexprIndexCond,
+												CExpression *pexprResidualCond,
+												const IMDIndex *pmdindex,
+												CTableDescriptor *ptabdesc,
+												COperator *popLogical);
 
 	// private copy ctor
 	CXformUtils(const CXformUtils &);
@@ -423,8 +423,8 @@ public:
 	static CExpression *PexprLogicalDMLOverProject(
 		CMemoryPool *mp, CExpression *pexprChild,
 		CLogicalDML::EDMLOperator edmlop, CTableDescriptor *ptabdesc,
-		CColRefArray *colref_array, CColRef *pcrCtid, CColRef *pcrSegmentId,
-		CColRef *pcrTableOid);
+		CColRefArray *colref_array, CColRefArray *pdrgpcrOutput,
+		CColRef *pcrCtid, CColRef *pcrSegmentId, CColRef *pcrTableOid);
 
 	// check whether there are any BEFORE or AFTER triggers on the
 	// given table that match the given DML operation

@@ -1312,7 +1312,7 @@ CXformUtils::PexprLogicalPartitionSelector(CMemoryPool *mp,
 CExpression *
 CXformUtils::PexprLogicalDMLOverProject(
 	CMemoryPool *mp, CExpression *pexprChild, CLogicalDML::EDMLOperator edmlop,
-	CTableDescriptor *ptabdesc, CColRefArray *colref_array, CColRef *pcrCtid,
+	CTableDescriptor *ptabdesc, CColRefArray *colref_array, CColRefArray *pdrgpcrOutput, CColRef *pcrCtid,
 	CColRef *pcrSegmentId, CColRef *pcrTableOid)
 {
 	GPOS_ASSERT(CLogicalDML::EdmlInsert == edmlop ||
@@ -1353,7 +1353,7 @@ CXformUtils::PexprLogicalDMLOverProject(
 
 	CExpression *pexprDML = GPOS_NEW(mp) CExpression(
 		mp,
-		GPOS_NEW(mp) CLogicalDML(mp, edmlop, ptabdesc, colref_array,
+		GPOS_NEW(mp) CLogicalDML(mp, edmlop, ptabdesc, colref_array, pdrgpcrOutput,
 								 GPOS_NEW(mp) CBitSet(mp) /*pbsModified*/,
 								 pcrAction, pcrCtid, pcrSegmentId,
 								 NULL /*pcrTupleOid*/, pcrTableOid),
