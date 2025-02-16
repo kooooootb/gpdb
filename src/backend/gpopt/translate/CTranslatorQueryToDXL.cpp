@@ -854,6 +854,16 @@ CTranslatorQueryToDXL::TranslateCTASToDXL()
 	GPOS_ASSERT(CMD_SELECT == m_query->commandType);
 	//GPOS_ASSERT(NULL != m_query->intoClause);
 
+	if (m_query->hasModifyingCTE)
+	{
+		// GPDB cannot have two writer segworker groups for one query.
+		// Furtherly, during execution stage an error will be thrown.
+		// However, showing the error early during translating stage would be more effective
+		GPOS_RAISE(
+			gpdxl::ExmaDXL, gpdxl::ExmiQuery2DXLUnsupportedFeature,
+			GPOS_WSZ_LIT("cannot create plan with several writing gangs"));
+	}
+
 	m_is_ctas_query = true;
 	CDXLNode *query_dxlnode = TranslateSelectQueryToDXL();
 
