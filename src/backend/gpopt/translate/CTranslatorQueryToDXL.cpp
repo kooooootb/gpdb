@@ -4756,7 +4756,7 @@ CTranslatorQueryToDXL::ConstructCTEProducerList(List *cte_list,
 
 		// translate query representing the cte table to its DXL representation
 		CDXLNode *cte_child_dxlnode =
-			query_to_dxl_translator.TranslateSelectQueryToDXL();
+			query_to_dxl_translator.TranslateQueryToDXL();
 
 		// get the output columns of the cte table
 		CDXLNodeArray *cte_query_output_colds_dxlnode_array =

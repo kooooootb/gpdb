@@ -20,6 +20,7 @@ extern void ExecDMLExplainEnd(PlanState *planstate, struct StringInfoData *buf);
 extern TupleTableSlot* ExecDML(DMLState *node);
 extern DMLState* ExecInitDML(DML *node, EState *estate, int eflags);
 extern void ExecEndDML(DMLState *node);
+extern void ExecSquelchDML(DMLState *node);
 
 #endif   /* NODEDML_H */
 

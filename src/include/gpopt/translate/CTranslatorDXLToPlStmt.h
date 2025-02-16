@@ -137,6 +137,9 @@ private:
 	// command type
 	CmdType m_cmd_type;
 
+	// is dml operation requiring returning
+	BOOL m_has_returning;
+
 	// is target table distributed, false when in non DML statements
 	BOOL m_is_tgt_tbl_distributed;
 

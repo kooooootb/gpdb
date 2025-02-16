@@ -80,6 +80,7 @@ CTranslatorDXLToPlStmt::CTranslatorDXLToPlStmt(
 	  m_md_accessor(md_accessor),
 	  m_dxl_to_plstmt_context(dxl_to_plstmt_context),
 	  m_cmd_type(CMD_SELECT),
+	  m_has_returning(false),
 	  m_is_tgt_tbl_distributed(false),
 	  m_result_rel_list(NULL),
 	  m_num_of_segments(num_of_segments),
@@ -263,6 +264,7 @@ CTranslatorDXLToPlStmt::GetPlannedStmtFromDXL(const CDXLNode *dxlnode,
 		m_dxl_to_plstmt_context->GetCurrentMotionId() - 1;
 
 	planned_stmt->commandType = m_cmd_type;
+	planned_stmt->hasReturning = m_has_returning;
 
 	GPOS_ASSERT(plan->nMotionNodes >= 0);
 	if (0 == plan->nMotionNodes && !m_is_tgt_tbl_distributed)
@@ -4193,6 +4195,8 @@ CTranslatorDXLToPlStmt::TranslateDXLDml(
 	dml->returningList =
 		TranslateDXLProjList(project_list_output_dxlnode, &base_table_context,
 							 child_contexts, output_context);
+
+	m_has_returning = dml->returningList != NIL;
 
 	// Create target list with nulls if rel has dropped cols. DELETE may have
 	// empty target list if there no after trigger present. Skip creating in

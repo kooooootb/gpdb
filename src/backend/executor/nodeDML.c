@@ -387,4 +387,24 @@ ExecEndDML(DMLState *node)
 	ExecEndNode(outerPlanState(node));
 	EndPlanStateGpmonPkt(&node->ps);
 }
+
+void
+ExecSquelchDML(DMLState *node)
+{
+	/*
+	 * DML nodes must run to completion when asked to Squelch so
+	 * that we don't risk losing modifications which should be performed
+	 * regardless of any LIMIT's or other forms for projections which could
+	 * end up causing a squelch to happen.
+	 */
+	for (;;)
+	{
+		TupleTableSlot *result;
+
+		result = ExecDML(node);
+		if (!result)
+			break;
+	}
+}
+
 /* EOF */
