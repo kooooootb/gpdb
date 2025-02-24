@@ -87,6 +87,10 @@ ExecDML(DMLState *node)
 		/* remove 'junk' columns from tuple */
 		node->cleanedUpSlot = ExecFilterJunk(node->junkfilter, projectedSlot);
 
+		/* restore returning projection result tuple */
+		node->ps.ps_ResultTupleSlot = node->resultTupleSlot;
+		node->resultTupleSlot = NULL;
+
 		/*
 		* If we are modifying a leaf partition we have to ensure that partition
 		* selection operation will consider leaf partition's attributes as
@@ -222,6 +226,7 @@ ExecInitDML(DML *node, EState *estate, int eflags)
 	dmlstate->ps.plan = (Plan *)node;
 	dmlstate->ps.state = estate;
 	dmlstate->canSetTag = node->canSetTag;
+	dmlstate->resultTupleSlot = NULL;
 	/*
 	 * Initialize es_result_relation_info, just like ModifyTable.
 	 * GPDB_90_MERGE_FIXME: do we need to consolidate the ModifyTable and DML
@@ -291,11 +296,13 @@ ExecInitDML(DML *node, EState *estate, int eflags)
 	if (node->returningList)
 	{
 		TupleTableSlot *slot;
+		TupleTableSlot *savedResultTuple = dmlstate->ps.ps_ResultTupleSlot;
 
 		/* Initialize result tuple slot and assign its rowtype */
 		TupleDesc tupDesc = ExecTypeFromTL(node->returningList, false);
 
 		/* Set up a slot for the output of the RETURNING projection(s) */
+		ExecInitResultTupleSlot(estate, &dmlstate->ps);
 		ExecAssignResultType(&dmlstate->ps, tupDesc);
 		slot = dmlstate->ps.ps_ResultTupleSlot;
 
@@ -304,9 +311,13 @@ ExecInitDML(DML *node, EState *estate, int eflags)
 			ExecBuildProjectionInfo(rliststate, dmlstate->ps.ps_ExprContext, slot,
 									resultRelInfo->ri_RelationDesc->rd_att);
 
-		// ExecDelete() needs this for some reason
+		/* Set up a tuple table slot for use for trigger output tuples */
 		if (estate->es_trig_tuple_slot == NULL)
 			estate->es_trig_tuple_slot = ExecInitExtraTupleSlot(estate);
+
+		/* temporary store created tuple in dedicated state field and restore saved */
+		dmlstate->resultTupleSlot = slot;
+		dmlstate->ps.ps_ResultTupleSlot = savedResultTuple;
 	}
 
 	/*
@@ -382,7 +393,10 @@ ExecEndDML(DMLState *node)
 	ReleaseTupleDesc(node->junkfilter->jf_cleanTupType);
 
 	ExecFreeExprContext(&node->ps);
-	ExecClearTuple(node->ps.ps_ResultTupleSlot);
+	if (node->ps.ps_ResultTupleSlot != NULL)
+	{
+		ExecClearTuple(node->ps.ps_ResultTupleSlot);
+	}
 	ExecClearTuple(node->cleanedUpSlot);
 	ExecEndNode(outerPlanState(node));
 	EndPlanStateGpmonPkt(&node->ps);
