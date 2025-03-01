@@ -37,6 +37,28 @@ ExecDMLExplainEnd(PlanState *planstate, struct StringInfoData *buf)
 }
 
 /*
+ * Edit input attr numbers of projection using attributes map
+ */
+void
+RemapProjection(ProjectionInfo *projInfo, AttrMap *map)
+{
+	int *varNumbers = projInfo->pi_varNumbers;
+	int numSimpleVars = projInfo->pi_numSimpleVars;
+
+    for (int i = 0; i < numSimpleVars;++i)
+    {
+		varNumbers[i] = attrMap(map, varNumbers[i]);
+    }
+
+	if (projInfo->pi_lastInnerVar > 0)
+		projInfo->pi_lastInnerVar = attrMap(map, projInfo->pi_lastInnerVar);
+	if (projInfo->pi_lastOuterVar > 0)
+		projInfo->pi_lastOuterVar = attrMap(map, projInfo->pi_lastOuterVar);
+	if (projInfo->pi_lastScanVar > 0)
+		projInfo->pi_lastScanVar = attrMap(map, projInfo->pi_lastScanVar);
+}
+
+/*
  * Executes INSERT and DELETE DML operations. The
  * action is specified within the TupleTableSlot at
  * plannode->actionColIdx.The ctid of the tuple to delete
@@ -174,8 +196,28 @@ ExecDML(DMLState *node)
 			* ResultRelInfo for the leaf partition.
 			*/
 			if (OidIsValid(tableoid) && node->ps.state->es_result_partitions)
+			{
+				ProjectionInfo *projRet =
+					node->ps.state->es_result_relation_info->ri_projectReturning;
+
 				node->ps.state->es_result_relation_info =
 					targetid_get_partition(tableoid, node->ps.state, true);
+				ResultRelInfo *relInfo = node->ps.state->es_result_relation_info;
+
+				if (projRet != NULL && relInfo->ri_projectReturning == NULL)
+				{
+					// make linked copy of returning projection with separate remapped input attr numbers
+					relInfo->ri_projectReturning = makeNode(ProjectionInfo);
+
+					*relInfo->ri_projectReturning = *projRet;
+					relInfo->ri_projectReturning->pi_varNumbers =
+						(int *) palloc(projRet->pi_numSimpleVars * sizeof(int));
+					memcpy(relInfo->ri_projectReturning->pi_varNumbers, projRet->pi_varNumbers,
+						projRet->pi_numSimpleVars * sizeof(int));
+
+					RemapProjection(relInfo->ri_projectReturning, relInfo->ri_partInsertMap);
+				}
+			}
 
 			ItemPointer  tupleid = (ItemPointer) DatumGetPointer(ctid);
 			ItemPointerData tuple_ctid = *tupleid;
