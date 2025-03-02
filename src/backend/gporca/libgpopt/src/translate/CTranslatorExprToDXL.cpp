@@ -4513,8 +4513,19 @@ CTranslatorExprToDXL::PdxlnMotion(CExpression *pexprMotion,
 	GPOS_ASSERT(NULL != motion);
 
 	// construct project list from child project list
-	GPOS_ASSERT(NULL != child_dxlnode && 1 <= child_dxlnode->Arity());
-	CDXLNode *pdxlnProjListChild = (*child_dxlnode)[0];
+	CDXLNode *pdxlnProjListChild;
+	if (COperator::EopPhysicalDML == pexprChild->Pop()->Eopid() &&
+		COperator::EopPhysicalMotionGather == pexprMotion->Pop()->Eopid())
+	{
+		// dml nodes unlike others have output proj list in second child
+		GPOS_ASSERT(NULL != child_dxlnode && 2 <= child_dxlnode->Arity());
+		pdxlnProjListChild = (*child_dxlnode)[1];
+	}
+	else
+	{
+		GPOS_ASSERT(NULL != child_dxlnode && 1 <= child_dxlnode->Arity());
+		pdxlnProjListChild = (*child_dxlnode)[0];
+	}
 
 	CDXLNode *proj_list_dxlnode =
 		CTranslatorExprToDXLUtils::PdxlnProjListFromChildProjList(
