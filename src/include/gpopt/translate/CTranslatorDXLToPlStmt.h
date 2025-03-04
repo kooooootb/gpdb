@@ -140,6 +140,9 @@ private:
 	// is dml operation requiring returning
 	BOOL m_has_returning;
 
+	// last calculated locus type to specify it in motion translation
+	CdbLocusType m_last_locus_type;
+
 	// is target table distributed, false when in non DML statements
 	BOOL m_is_tgt_tbl_distributed;
 

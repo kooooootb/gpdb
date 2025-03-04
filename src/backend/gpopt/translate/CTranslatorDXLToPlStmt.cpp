@@ -81,6 +81,7 @@ CTranslatorDXLToPlStmt::CTranslatorDXLToPlStmt(
 	  m_dxl_to_plstmt_context(dxl_to_plstmt_context),
 	  m_cmd_type(CMD_SELECT),
 	  m_has_returning(false),
+	  m_last_locus_type(CdbLocusType_Null),
 	  m_is_tgt_tbl_distributed(false),
 	  m_result_rel_list(NULL),
 	  m_num_of_segments(num_of_segments),
@@ -2284,7 +2285,12 @@ CTranslatorDXLToPlStmt::TranslateDXLMotion(
 		flow->flotype = FLOW_UNDEFINED;
 	}
 
+	flow->locustype = m_last_locus_type;
+	m_last_locus_type = CdbLocusType_Null;
+
 	child_plan->flow = flow;
+
+	plan->flow = MakeNode(Flow);
 
 	motion->motionID = m_dxl_to_plstmt_context->GetNextMotionId();
 	plan->lefttree = child_plan;
@@ -2299,6 +2305,7 @@ CTranslatorDXLToPlStmt::TranslateDXLMotion(
 			motion->motionType = MOTIONTYPE_FIXED;
 			motion->isBroadcast = false;
 			flow->numsegments = 1;
+			plan->flow->numsegments = motion_dxlop->GetInputSegIdsArray()->Size();
 
 			break;
 		}
@@ -4196,7 +4203,24 @@ CTranslatorDXLToPlStmt::TranslateDXLDml(
 		TranslateDXLProjList(project_list_output_dxlnode, &base_table_context,
 							 child_contexts, output_context);
 
-	m_has_returning = dml->returningList != NIL;
+	m_has_returning = m_has_returning || dml->returningList != NIL;
+
+	if (dml->returningList != NIL)
+	{
+		switch (md_rel->GetRelDistribution())
+		{
+			case IMDRelation::EreldistrHash:
+			case IMDRelation::EreldistrRandom:
+				m_last_locus_type = CdbLocusType_Hashed;
+				break;
+			case IMDRelation::EreldistrReplicated:
+				m_last_locus_type = CdbLocusType_Replicated;
+				break;
+			default:
+				m_last_locus_type = CdbLocusType_Null;
+				break;
+		}
+	}
 
 	// Create target list with nulls if rel has dropped cols. DELETE may have
 	// empty target list if there no after trigger present. Skip creating in
