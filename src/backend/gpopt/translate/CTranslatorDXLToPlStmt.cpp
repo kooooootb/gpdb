@@ -2290,8 +2290,6 @@ CTranslatorDXLToPlStmt::TranslateDXLMotion(
 
 	child_plan->flow = flow;
 
-	plan->flow = MakeNode(Flow);
-
 	motion->motionID = m_dxl_to_plstmt_context->GetNextMotionId();
 	plan->lefttree = child_plan;
 	plan->nMotionNodes = child_plan->nMotionNodes + 1;
@@ -2305,7 +2303,6 @@ CTranslatorDXLToPlStmt::TranslateDXLMotion(
 			motion->motionType = MOTIONTYPE_FIXED;
 			motion->isBroadcast = false;
 			flow->numsegments = 1;
-			plan->flow->numsegments = motion_dxlop->GetInputSegIdsArray()->Size();
 
 			break;
 		}
