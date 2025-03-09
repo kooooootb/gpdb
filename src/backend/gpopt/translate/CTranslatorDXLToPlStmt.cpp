@@ -81,7 +81,7 @@ CTranslatorDXLToPlStmt::CTranslatorDXLToPlStmt(
 	  m_dxl_to_plstmt_context(dxl_to_plstmt_context),
 	  m_cmd_type(CMD_SELECT),
 	  m_has_returning(false),
-	  m_last_locus_type(CdbLocusType_Null),
+	  m_returning_dml_on_replicated(false),
 	  m_is_tgt_tbl_distributed(false),
 	  m_result_rel_list(NULL),
 	  m_num_of_segments(num_of_segments),
@@ -2285,8 +2285,13 @@ CTranslatorDXLToPlStmt::TranslateDXLMotion(
 		flow->flotype = FLOW_UNDEFINED;
 	}
 
-	flow->locustype = m_last_locus_type;
-	m_last_locus_type = CdbLocusType_Null;
+	if (m_returning_dml_on_replicated && input_segids_array->Size() == 1)
+	{
+		// we set locus type in child node in this case
+		// to filter doubling output on executor side
+		flow->locustype = CdbLocusType_Replicated;
+	}
+	m_returning_dml_on_replicated = false;
 
 	child_plan->flow = flow;
 
@@ -4202,21 +4207,9 @@ CTranslatorDXLToPlStmt::TranslateDXLDml(
 
 	m_has_returning = m_has_returning || dml->returningList != NIL;
 
-	if (dml->returningList != NIL)
+	if (dml->returningList != NIL && md_rel->GetRelDistribution() == IMDRelation::EreldistrReplicated)
 	{
-		switch (md_rel->GetRelDistribution())
-		{
-			case IMDRelation::EreldistrHash:
-			case IMDRelation::EreldistrRandom:
-				m_last_locus_type = CdbLocusType_Hashed;
-				break;
-			case IMDRelation::EreldistrReplicated:
-				m_last_locus_type = CdbLocusType_Replicated;
-				break;
-			default:
-				m_last_locus_type = CdbLocusType_Null;
-				break;
-		}
+		m_returning_dml_on_replicated = true;
 	}
 
 	// Create target list with nulls if rel has dropped cols. DELETE may have
