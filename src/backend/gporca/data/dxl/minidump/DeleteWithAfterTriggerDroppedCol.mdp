@@ -262,30 +262,6 @@ drop function func_trigger();
               </dxl:ProjElem>
             </dxl:ProjList>
             <dxl:ProjList>
-              <dxl:ProjElem ColId="8" Alias="i">
-                <dxl:Ident ColId="8" ColName="i" TypeMdid="0.23.1.0"/>
-              </dxl:ProjElem>
-              <dxl:ProjElem ColId="9" Alias="ctid">
-                <dxl:Ident ColId="9" ColName="ctid" TypeMdid="0.27.1.0"/>
-              </dxl:ProjElem>
-              <dxl:ProjElem ColId="10" Alias="xmin">
-                <dxl:Ident ColId="10" ColName="xmin" TypeMdid="0.28.1.0"/>
-              </dxl:ProjElem>
-              <dxl:ProjElem ColId="11" Alias="cmin">
-                <dxl:Ident ColId="11" ColName="cmin" TypeMdid="0.29.1.0"/>
-              </dxl:ProjElem>
-              <dxl:ProjElem ColId="12" Alias="xmax">
-                <dxl:Ident ColId="12" ColName="xmax" TypeMdid="0.28.1.0"/>
-              </dxl:ProjElem>
-              <dxl:ProjElem ColId="13" Alias="cmax">
-                <dxl:Ident ColId="13" ColName="cmax" TypeMdid="0.29.1.0"/>
-              </dxl:ProjElem>
-              <dxl:ProjElem ColId="14" Alias="tableoid">
-                <dxl:Ident ColId="14" ColName="tableoid" TypeMdid="0.26.1.0"/>
-              </dxl:ProjElem>
-              <dxl:ProjElem ColId="15" Alias="gp_segment_id">
-                <dxl:Ident ColId="15" ColName="gp_segment_id" TypeMdid="0.23.1.0"/>
-              </dxl:ProjElem>
               <dxl:ProjElem ColId="0" Alias="i">
                 <dxl:Ident ColId="0" ColName="i" TypeMdid="0.23.1.0"/>
               </dxl:ProjElem>

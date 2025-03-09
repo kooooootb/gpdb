@@ -287,30 +287,6 @@
               </dxl:ProjElem>
             </dxl:ProjList>
             <dxl:ProjList>
-              <dxl:ProjElem ColId="10" Alias="t1">
-                <dxl:Ident ColId="10" ColName="t1" TypeMdid="0.23.1.0"/>
-              </dxl:ProjElem>
-              <dxl:ProjElem ColId="13" Alias="ctid">
-                <dxl:Ident ColId="13" ColName="ctid" TypeMdid="0.27.1.0"/>
-              </dxl:ProjElem>
-              <dxl:ProjElem ColId="14" Alias="xmin">
-                <dxl:Ident ColId="14" ColName="xmin" TypeMdid="0.28.1.0"/>
-              </dxl:ProjElem>
-              <dxl:ProjElem ColId="15" Alias="cmin">
-                <dxl:Ident ColId="15" ColName="cmin" TypeMdid="0.29.1.0"/>
-              </dxl:ProjElem>
-              <dxl:ProjElem ColId="16" Alias="xmax">
-                <dxl:Ident ColId="16" ColName="xmax" TypeMdid="0.28.1.0"/>
-              </dxl:ProjElem>
-              <dxl:ProjElem ColId="17" Alias="cmax">
-                <dxl:Ident ColId="17" ColName="cmax" TypeMdid="0.29.1.0"/>
-              </dxl:ProjElem>
-              <dxl:ProjElem ColId="18" Alias="tableoid">
-                <dxl:Ident ColId="18" ColName="tableoid" TypeMdid="0.26.1.0"/>
-              </dxl:ProjElem>
-              <dxl:ProjElem ColId="19" Alias="gp_segment_id">
-                <dxl:Ident ColId="19" ColName="gp_segment_id" TypeMdid="0.23.1.0"/>
-              </dxl:ProjElem>
               <dxl:ProjElem ColId="0" Alias="s1">
                 <dxl:Ident ColId="0" ColName="s1" TypeMdid="0.23.1.0"/>
               </dxl:ProjElem>
