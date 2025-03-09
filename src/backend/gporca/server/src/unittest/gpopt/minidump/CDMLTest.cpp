@@ -29,6 +29,8 @@ ULONG CDMLTest::m_ulDMLTestCounter = 0;	 // start from first test
 const CHAR *rgszDMLFileNames[] = {
 	"../data/dxl/minidump/Insert.mdp",
 	"../data/dxl/minidump/InsertIntoReturning.mdp",
+	"../data/dxl/minidump/DeleteReturning.mdp",
+	"../data/dxl/minidump/UpdateReturning.mdp",
 	"../data/dxl/minidump/MultipleUpdateWithJoinOnDistCol.mdp",
 	"../data/dxl/minidump/UpdatingNonDistributionColumnFunc.mdp",
 	"../data/dxl/minidump/UpdatingMultipleColumn.mdp",

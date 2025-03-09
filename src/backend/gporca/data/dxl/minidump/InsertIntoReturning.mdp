@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 set optimizer=on;
-set optimizer_enumerate_plans=on;
 
 create table ttt(id bigint, data text) with (appendonly=true) distributed by (id);
 insert into ttt values (123, 'daad') returning id+length(data);
