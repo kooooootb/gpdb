@@ -77,10 +77,10 @@ private:
 	CColRefSet *m_pcrsRequiredLocal;
 
 	// in case of CTAS dml node will output source columns
-	const BOOL m_isCTAS; 
+	const BOOL m_isCTAS;
 
 	// is there any triggers for this kind of dml operation
-	const BOOL m_hasTriggers; 
+	const BOOL m_hasTriggers;
 
 	// compute required order spec
 	COrderSpec *PosComputeRequired(CMemoryPool *mp, CTableDescriptor *ptabdesc);

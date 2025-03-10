@@ -1453,9 +1453,8 @@ CTranslatorDXLToExpr::PexprLogicalDelete(const CDXLNode *dxlnode)
 	CColRefArray *colref_array =
 		CTranslatorDXLToExprUtils::Pdrgpcr(m_mp, m_phmulcr, pdrgpulCols);
 
-	CLogicalDelete *pexprLogDelete = 
-		GPOS_NEW(m_mp) CLogicalDelete(m_mp, ptabdesc, colref_array, pcrCtid,
-									  pcrSegmentId, pcrTableOid);
+	CLogicalDelete *pexprLogDelete = GPOS_NEW(m_mp) CLogicalDelete(
+		m_mp, ptabdesc, colref_array, pcrCtid, pcrSegmentId, pcrTableOid);
 
 	// add mapping between the DXL ColId and CColRef to m_phmulcr
 	ConstructDXLColId2ColRefMapping(

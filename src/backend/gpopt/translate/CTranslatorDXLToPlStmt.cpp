@@ -4207,7 +4207,8 @@ CTranslatorDXLToPlStmt::TranslateDXLDml(
 
 	m_has_returning = m_has_returning || dml->returningList != NIL;
 
-	if (dml->returningList != NIL && md_rel->GetRelDistribution() == IMDRelation::EreldistrReplicated)
+	if (dml->returningList != NIL &&
+		md_rel->GetRelDistribution() == IMDRelation::EreldistrReplicated)
 	{
 		m_returning_dml_on_replicated = true;
 	}

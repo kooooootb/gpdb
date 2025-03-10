@@ -5828,7 +5828,8 @@ CTranslatorExprToDXL::PdxlnDML(CExpression *pexpr,
 	{
 		ULongPtrArray *indexes = GPOS_NEW(m_mp) ULongPtrArray(m_mp);
 
-		for (ULONG outputColIndex = 0;outputColIndex < pdrgpcrOutput->Size();outputColIndex++)
+		for (ULONG outputColIndex = 0; outputColIndex < pdrgpcrOutput->Size();
+			 outputColIndex++)
 		{
 			CColRef *colref = (*pdrgpcrOutput)[outputColIndex];
 			if (colref->GetUsage(true, true) == CColRef::EUsed)
@@ -7791,7 +7792,8 @@ CTranslatorExprToDXL::PdxlnProjList(const CColRefSet *pcrsOutput,
 
 				if (!pcrs->FMember(colref))
 				{
-					CDXLNode *pdxlnPrEl = CTranslatorExprToDXLUtils::PdxlnProjElem(
+					CDXLNode *pdxlnPrEl =
+						CTranslatorExprToDXLUtils::PdxlnProjElem(
 							m_mp, m_phmcrdxln, colref);
 					pdxlnPrL->AddChild(pdxlnPrEl);
 					pcrs->Include(colref);
